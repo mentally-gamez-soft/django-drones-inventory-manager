@@ -5,6 +5,7 @@ from .models import CameraProduct, DroneProduct
 from .forms import CameraCreationForm, SearchCamerasForm, DroneCreationForm, SearchDroneForm
 from datetime import datetime
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 
 def home(request):
@@ -40,7 +41,6 @@ class DroneAddView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             if len(input_keys) > 0:
                 for key in input_keys:
                     id_key = key[key.find('-') + 1:len(key)]
-                    print(id_key)
                     form.instance.compatible_camera.add(CameraProduct.objects.get(id=id_key))
 
         return super().form_valid(form)
@@ -66,8 +66,6 @@ class DroneUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         input_keys = [key for key in self.request.POST if key.startswith("camera-")]
         form.instance.last_updated_by = self.request.user
         form.instance.last_updated = datetime.now()
-
-        print(self.request.POST)
 
         if super().form_valid(form):
             all_cameras = self.get_object().compatible_camera.all()
@@ -130,16 +128,25 @@ class DroneListView(ListView):
 
         form_search_drone = SearchDroneForm(self.request.GET)
 
+        page_size = self.get_paginate_by(object_list)
+        paginator, page, queryset, is_paginated = self.paginate_queryset(object_list, page_size)
+
         if sort_results:
             context = {
                 'form': form_search_drone,
-                'object_list': object_list,
+                'object_list': queryset,
                 'sorted': sort_results,
+                'is_paginated': is_paginated,
+                'page_obj': page,
+                'paginator': paginator,
             }
         else:
             context = {
                 'form': form_search_drone,
-                'object_list': object_list,
+                'object_list': queryset,
+                'is_paginated': is_paginated,
+                'page_obj': page,
+                'paginator': paginator,
             }
 
         return render(self.request, "inventory/droneproduct_list.html", context)
@@ -185,7 +192,6 @@ class CameraListView(ListView):
         sort_results = self.request.GET.get('sort')
 
         object_list = CameraProduct.objects.all()
-
         if filter_brand:
             object_list = object_list.filter(brand__icontains=filter_brand)
 
@@ -197,16 +203,25 @@ class CameraListView(ListView):
 
         form_search_camera = SearchCamerasForm(self.request.GET)
 
+        page_size = self.get_paginate_by(object_list)
+        paginator, page, queryset, is_paginated = self.paginate_queryset(object_list, page_size)
+
         if sort_results:
             context = {
                 'form': form_search_camera,
-                'object_list': object_list,
+                'object_list': queryset,
                 'sorted': sort_results,
+                'is_paginated': is_paginated,
+                'page_obj': page,
+                'paginator': paginator,
             }
         else:
             context = {
                 'form': form_search_camera,
-                'object_list': object_list,
+                'object_list': queryset,
+                'is_paginated': is_paginated,
+                'page_obj': page,
+                'paginator': paginator,
             }
 
         return render(self.request, "inventory/cameraproduct_list.html", context)
