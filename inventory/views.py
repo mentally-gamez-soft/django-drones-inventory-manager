@@ -16,7 +16,7 @@ def home(request):
 
     l_drones = DroneProduct.objects.all()
     nb_drones = l_drones.count()
-    l_drones_temp = l_drones[:5]
+    l_drones = l_drones[:5]
 
     return render(request, 'inventory/index.html', {'nb_cameras': nb_cameras,
                                                     'l_cameras': l_cameras,
