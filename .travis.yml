@@ -5,6 +5,8 @@ script:
   - python manage.py test
 services:
   - postgresql
+env:
+  - SECRET_KEY='PIX4D!teST'
 install:
   - pipenv install
 notifications:
