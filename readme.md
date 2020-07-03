@@ -1,0 +1,1 @@
+### PIX4D - Drone inventory manager App [![Build Status](https://travis-ci.com/mentally-gamez-soft/django-drones-inventory-manager.svg?branch=master)](https://travis-ci.com/mentally-gamez-soft/django-drones-inventory-manager)
