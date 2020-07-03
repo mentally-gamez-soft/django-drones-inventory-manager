@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2 class="mt-5 ml-3">You're now logged out</h2>
+
+    <section class="mt-5">
+        <small class="text-muted">
+            <a class="ml-3" href="{% url 'login' %}">Want to login again ?</a>
+        </small>
+
+        <small class="text-muted">
+            <a class="ml-3" href="{% url 'inventory-home' %}">Get me to homepage</a>
+        </small>
+
+    </section>
+
+{% endblock content %}

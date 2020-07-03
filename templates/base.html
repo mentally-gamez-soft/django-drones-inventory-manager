@@ -1,0 +1,125 @@
+{% load static %}
+{% load i18n %}
+
+
+<!DOCTYPE html>
+
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+
+
+
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <title>{% block title %}{% endblock %}</title>
+
+
+
+
+    {% block css %}
+
+        {%comment%} Third-party CSS libraries go here {%endcomment%}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+        {%comment%} Project specific CSS
+        <link rel="stylesheet" href="{% static 'css/blinking-alert.css'  %}">
+        {%endcomment%}
+
+    {% endblock css %}
+
+
+    {% block mycustomcss %}
+     <style>
+     .welcome-message {
+               font-size: 1em;
+               color:rgb(74, 233, 172);
+               }
+     </style>
+    {% endblock mycustomcss %}
+
+
+    {% block javascript %}
+
+        {%comment%} Third-party javascript libraries go here{%endcomment%}
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-base/2.1.6/stellar-base.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/smooth-scroll/16.1.0/smooth-scroll.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js"></script>
+
+        {%comment%} Project specific javascript
+        <script src="{%static 'js/spinner-delay.js' %}"></script>
+        {%endcomment%}
+
+    {% endblock javascript %}
+
+  </head>
+
+  <body>
+
+
+    {%comment%}CORPS DE LA NAVIGATION BAR ICI{%endcomment%}
+    <!-- MENU -->
+    <!-- <section class="navbar custom-navbar navbar-fixed-top" role="navigation"> -->
+    <!-- <section class="navbar navbar-expand-xl navbar-dark fixed-top bg-dark custom-navbar" role="navigation"> -->
+    <section class="navbar navbar-expand-xl navbar-dark bg-dark fixed-top" role="navigation">
+        <div class="container">
+            <a href="{% url 'inventory-home'%}" class="navbar-brand custom-3d-brand"> Pix4D Inventory </a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+             <!-- MENU LINKS -->
+               <div class="collapse navbar-collapse" id="navbarCollapse">
+
+                    <ul class="navbar-nav ml-auto">
+                         {%if user.is_anonymous %}
+                              <li class="nav-item"><a href="{% url 'register'%}" class="mr-3"> Join </a></li>
+                              <li class="nav-item"><a href="{% url 'login' %}" class="ml-3"> Sign in </a></li>
+                         {%else%}
+                            <li class="nav-item"><span class="welcome-message mr-3">Hello {{user.username}}</span></li>
+                            <li class="nav-item"><a href="{% url 'logout' %}" class="ml-3"> Log Out </a></li>
+                         {%endif%}
+                  </ul>
+
+               </div>
+        </div>
+    </section>
+
+
+
+
+     {%comment%}  Affichage des messages flash ici {%endcomment%}
+     <section class="section-alert mt-5">
+         <div>
+              {% if messages %}
+                   {% for message in messages %}
+                        <div class='alert alert-{{ message.tags }}'>
+                             {{message}}
+                        </div>
+                   {% endfor %}
+              {% endif %}
+         </div>
+     </section>
+
+
+     <div class="mt-5">
+     {% block content %}
+     {% endblock content %}
+     </div>
+
+  </body>
+</html>

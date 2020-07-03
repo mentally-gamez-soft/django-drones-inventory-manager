@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="d-flex justify-content-center">
+    <h1>Welcome to Pix4D drones inventory web page</h1>
+</div>
+
+<section class="ml-2 mt-2">
+    <legend>Status:</legend>
+    <div class="ml-2">
+        <span class="text-info">There are currently {{nb_cameras}} cameras recorded</span>
+     </div>
+     <div class="mt-1 ml-2">
+        <span class="text-info">There are currently {{nb_drones}} drones recorded</span>
+     </div>
+ </section>
+
+ <section class="ml-2 mt-5">
+    <legend>Cameras Preview information (only 5 elements)</legend>
+
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Brand</th>
+              <th scope="col">Model Designation</th>
+              <th scope="col">Sensor Resolution</th>
+              <th scope="col">Added on</th>
+              <th scope="col">Added by</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for camera in l_cameras %}
+                <tr>
+                    {% if user.is_anonymous%}
+                        <th scope="row">{{camera.id}}</th>
+                    {% else %}
+                        <th scope="row"><a href="{% url 'camera-update' camera.id %}">{{camera.id}}</a></th>
+                    {% endif%}
+                    <td>{{camera.brand}}</td>
+                    <td>{{camera.model}}</td>
+                    <td>{{camera.camera_resolution}}</td>
+                    <td>{{camera.added_date}}</td>
+                    <td>{{camera.added_by}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        {% if user.is_anonymous %}
+            <a href="{% url 'camera-list' %}" class="btn btn-outline-info">View full cameras list</a>
+        {%else%}
+            <a href="{% url 'camera-list' %}" class="btn btn-outline-info">View full cameras list</a>
+            <a href="{% url 'camera-add' %}" class="btn btn-outline-success">Add a new camera to the list</a>
+        {% endif %}
+    </div>
+ </section>
+
+<section class="ml-2 mt-5">
+    <legend>Drones Preview information (only 5 elements)</legend>
+
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Brand</th>
+              <th scope="col">Model Designation</th>
+              <th scope="col">Compatible Camera Model</th>
+              <th scope="col">Added on</th>
+              <th scope="col">Added by</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for drone in l_drones %}
+                {% if drone.compatible_camera.all.count == 0 %}
+                <tr>
+                    {% if user.is_anonymous%}
+                      <th scope="row">{{drone.id}}</th>
+                    {%else%}
+                      <th scope="row"><a href="{% url 'drone-update' drone.id %}">{{drone.id}}</a></th>
+                    {% endif %}
+                    <td>{{drone.brand}}</td>
+                    <td>{{drone.model}}</td>
+                    <td></td>
+                    <td>{{drone.added_date}}</td>
+                    <td>{{drone.added_by}}</td>
+                </tr>
+                {% else %}
+                    {% for camera in drone.compatible_camera.all %}
+                    <tr>
+                        {% if user.is_anonymous%}
+                          <th scope="row">{{drone.id}}</th>
+                        {%else%}
+                          <th scope="row"><a href="{% url 'drone-update' drone.id %}">{{drone.id}}</a></th>
+                        {% endif %}
+                        <td>{{drone.brand}}</td>
+                        <td>{{drone.model}}</td>
+                        <td>
+                            {%if user.is_anonymous %}
+                            {{camera}}
+                            {% else %}
+                            <a href="{% url 'camera-update' camera.id %}">{{camera}}</a>
+                            {% endif %}
+                        </td>
+                        <td>{{drone.added_date}}</td>
+                        <td>{{drone.added_by}}</td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        {% if user.is_anonymous %}
+            <a href="{% url 'drone-list' %}" class="btn btn-outline-info">View full drones list</a>
+        {%else%}
+            <a href="{% url 'drone-list' %}" class="btn btn-outline-info">View full drones list</a>
+            <a href="{% url 'drone-add' %}" class="btn btn-outline-success">Add a new drone to the list</a>
+        {% endif %}
+    </div>
+ </section>
+
+{% endblock content %}

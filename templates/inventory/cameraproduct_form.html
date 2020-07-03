@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  <section class="mt-5 ml-5 mr-5">
+        <form method="POST" >
+            {% csrf_token %}
+
+            <fieldset class="from-group">
+                <legend class="border-bottom mt-5">Add or Update Cameras</legend>
+
+                {{ form | crispy }}
+
+            </fieldset>
+
+
+            <div class="form-group">
+                <button class="btn-outline-info" type="submit">Validate</button>
+                <a class="btn btn-outline-danger ml-1" href="{%url 'camera-list' %}">Cancel</a>
+            </div>
+
+
+        </form>
+
+
+    </section>
+
+
+
+{% endblock content %}

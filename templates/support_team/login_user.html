@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <section class="mt-5 ml-5 mr-5">
+        <form method="POST" >
+            {% csrf_token %}
+
+            <fieldset class="from-group">
+                <legend class="border-bottom mt-5">Log in</legend>
+
+                {{ form | crispy }}
+
+            </fieldset>
+
+            <div class="form-group">
+                <button class="btn-outline-primary" type="submit">Login</button>
+            </div>
+
+        </form>
+
+
+    </section>
+
+{% endblock content %}

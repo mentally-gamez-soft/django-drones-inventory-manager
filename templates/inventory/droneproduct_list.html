@@ -1,0 +1,301 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  <section class="ml-3  mr-3 mt-5">
+
+    <legend >Filters for Drones</legend>
+
+        <form method="GET" action=".">
+
+            <div class="form-row">
+                <div class="col">
+
+                    <div class="container">
+
+                        <fieldset >
+                           <div id="div_id_brand" class="form-group row">
+                                <label for="id_brand" class="col-sm ml-1">Brand: </label>
+                                {% if form.brand.value is not None %}
+                                <input type="text" class="form-control col-sm mr-3" id="id_brand" placeholder="Panasonic" name="brand" value="{{form.brand.value}}">
+                                {% else %}
+                                <input type="text" class="form-control col-sm mr-3" id="id_brand" placeholder="Panasonic" name="brand" value="">
+                                {% endif %}
+
+                            </div>
+
+
+                            <div id="div_id_model" class="form-group row">
+                                <label for="id_model" class="col-sm ml-1">Model: </label>
+                                {% if form.model.value is not None %}
+                                <input type="text" class="form-control col-sm mr-3" id="id_model" placeholder="S1R"  name="model" value="{{form.model.value}}">
+                                {% else %}
+                                <input type="text" class="form-control col-sm mr-3" id="id_model" placeholder="S1R"  name="model" value="">
+                                {% endif %}
+
+                            </div>
+
+                            <div id="div_id_sn" class="form-group row">
+                                <label for="id_sn" class="col-sm ml-1">serial number: </label>
+                                {% if form.serial_number.value is not None %}
+                                <input type="text" class="form-control col-sm mr-3" id="id_sn" placeholder="16 Mpx"  name="serial_number" value="{{form.serial_number.value}}">
+                                {% else %}
+                                <input type="text" class="form-control col-sm mr-3" id="id_sn" placeholder="16 Mpx"  name="serial_number" value="">
+                                {% endif %}
+
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row ml-5 mr-5">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Filter Drones Search</button>
+            </div>
+
+        </form>
+
+
+  </section>
+
+  <section class="ml-3  mr-3 mt-5">
+    <legend>Drones details information</legend>
+
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col"><a href="{% url 'drone-list' %}?sort=brand">Brand</a></th>
+              <th scope="col"><a href="{% url 'drone-list' %}?sort=model">Model Designation</a></th>
+              <th scope="col"><a href="{% url 'drone-list' %}?sort=sn">Serial Number</a></th>
+              <th scope="col">Compatible Camera</th>
+              <th scope="col"><a href="{% url 'drone-list' %}?sort=date">Added on</a></th>
+              <th scope="col"><a href="{% url 'drone-list' %}?sort=user">Added by</a></th>
+              <th scope="col">Last Updated on</th>
+              <th scope="col">Last Updated by</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% if sorted == 'brand' %}
+              {% for drone in object_list|dictsort:'brand' %}
+                {% if drone.compatible_camera.all.count == 0 %}
+                  <tr>
+                      {% if user.is_anonymous%}
+                        <th scope="row">{{drone.id}}</th>
+                      {%else%}
+                        <th scope="row"><a href="{% url 'drone-update' drone.id %}">{{drone.id}}</a></th>
+                      {% endif %}
+                      <td>{{drone.brand}}</td>
+                      <td>{{drone.model}}</td>
+                      <td>{{drone.serial_number}}</td>
+                      <td></td>
+                      <td>{{drone.added_date}}</td>
+                      <td>{{drone.added_by}}</td>
+                      <td>{{drone.last_updated}}</td>
+                      <td>{{drone.last_updated_by}}</td>
+                  </tr>
+                  {% else %}
+                      {% for camera in drone.compatible_camera.all %}
+                      <tr>
+                          {% if user.is_anonymous%}
+                            <th scope="row">{{drone.id}}</th>
+                          {%else%}
+                            <th scope="row"><a href="{% url 'drone-update' drone.id %}">{{drone.id}}</a></th>
+                          {% endif %}
+                          <td>{{drone.brand}}</td>
+                          <td>{{drone.model}}</td>
+                          <td>{{drone.serial_number}}</td>
+                          <td>
+                              {%if user.is_anonymous %}
+                              {{camera}}
+                              {% else %}
+                              <a href="{% url 'camera-update' camera.id %}">{{camera}}</a>
+                              {% endif %}
+                          </td>
+                          <td>{{drone.added_date}}</td>
+                          <td>{{drone.added_by}}</td>
+                          <td>{{drone.last_updated}}</td>
+                          <td>{{drone.last_updated_by}}</td>
+                      </tr>
+                      {% endfor %}
+                  {% endif %}
+              {% endfor %}
+            {% elif sorted == 'model' %}
+              {% for drone in object_list|dictsort:'model' %}
+                {% if drone.compatible_camera.all.count == 0 %}
+                  <tr>
+                      {% if user.is_anonymous%}
+                        <th scope="row">{{drone.id}}</th>
+                      {%else%}
+                        <th scope="row"><a href="{% url 'drone-update' drone.id %}">{{drone.id}}</a></th>
+                      {% endif %}
+                      <td>{{drone.brand}}</td>
+                      <td>{{drone.model}}</td>
+                      <td>{{drone.serial_number}}</td>
+                      <td></td>
+                      <td>{{drone.added_date}}</td>
+                      <td>{{drone.added_by}}</td>
+                      <td>{{drone.last_updated}}</td>
+                      <td>{{drone.last_updated_by}}</td>
+                  </tr>
+                  {% else %}
+                      {% for camera in drone.compatible_camera.all %}
+                      <tr>
+                          {% if user.is_anonymous%}
+                            <th scope="row">{{drone.id}}</th>
+                          {%else%}
+                            <th scope="row"><a href="{% url 'drone-update' drone.id %}">{{drone.id}}</a></th>
+                          {% endif %}
+                          <td>{{drone.brand}}</td>
+                          <td>{{drone.model}}</td>
+                          <td>{{drone.serial_number}}</td>
+                          <td>
+                              {%if user.is_anonymous %}
+                              {{camera}}
+                              {% else %}
+                              <a href="{% url 'camera-update' camera.id %}">{{camera}}</a>
+                              {% endif %}
+                          </td>
+                          <td>{{drone.added_date}}</td>
+                          <td>{{drone.added_by}}</td>
+                          <td>{{drone.last_updated}}</td>
+                          <td>{{drone.last_updated_by}}</td>
+                      </tr>
+                      {% endfor %}
+                  {% endif %}
+              {% endfor %}
+            {% elif sorted == 'sn' %}
+              {% for drone in object_list|dictsort:'serial_number' %}
+                {% if drone.compatible_camera.all.count == 0 %}
+                  <tr>
+                      {% if user.is_anonymous%}
+                        <th scope="row">{{drone.id}}</th>
+                      {%else%}
+                        <th scope="row"><a href="{% url 'drone-update' drone.id %}">{{drone.id}}</a></th>
+                      {% endif %}
+                      <td>{{drone.brand}}</td>
+                      <td>{{drone.model}}</td>
+                      <td>{{drone.serial_number}}</td>
+                      <td></td>
+                      <td>{{drone.added_date}}</td>
+                      <td>{{drone.added_by}}</td>
+                      <td>{{drone.last_updated}}</td>
+                      <td>{{drone.last_updated_by}}</td>
+                  </tr>
+                  {% else %}
+                      {% for camera in drone.compatible_camera.all %}
+                      <tr>
+                          {% if user.is_anonymous%}
+                            <th scope="row">{{drone.id}}</th>
+                          {%else%}
+                            <th scope="row"><a href="{% url 'drone-update' drone.id %}">{{drone.id}}</a></th>
+                          {% endif %}
+                          <td>{{drone.brand}}</td>
+                          <td>{{drone.model}}</td>
+                          <td>{{drone.serial_number}}</td>
+                          <td>
+                              {%if user.is_anonymous %}
+                              {{camera}}
+                              {% else %}
+                              <a href="{% url 'camera-update' camera.id %}">{{camera}}</a>
+                              {% endif %}
+                          </td>
+                          <td>{{drone.added_date}}</td>
+                          <td>{{drone.added_by}}</td>
+                          <td>{{drone.last_updated}}</td>
+                          <td>{{drone.last_updated_by}}</td>
+                      </tr>
+                      {% endfor %}
+                  {% endif %}
+              {% endfor %}
+            {% else %}
+            {% for drone in object_list%}
+                {% if drone.compatible_camera.all.count == 0 %}
+                <tr>
+                    {% if user.is_anonymous%}
+                      <th scope="row">{{drone.id}}</th>
+                    {%else%}
+                      <th scope="row"><a href="{% url 'drone-update' drone.id %}">{{drone.id}}</a></th>
+                    {% endif %}
+                    <td>{{drone.brand}}</td>
+                    <td>{{drone.model}}</td>
+                    <td>{{drone.serial_number}}</td>
+                    <td></td>
+                    <td>{{drone.added_date}}</td>
+                    <td>{{drone.added_by}}</td>
+                    <td>{{drone.last_updated}}</td>
+                    <td>{{drone.last_updated_by}}</td>
+                </tr>
+                {% else %}
+                    {% for camera in drone.compatible_camera.all %}
+                    <tr>
+                        {% if user.is_anonymous%}
+                          <th scope="row">{{drone.id}}</th>
+                        {%else%}
+                          <th scope="row"><a href="{% url 'drone-update' drone.id %}">{{drone.id}}</a></th>
+                        {% endif %}
+                        <td>{{drone.brand}}</td>
+                        <td>{{drone.model}}</td>
+                        <td>{{drone.serial_number}}</td>
+                        <td>
+                            {%if user.is_anonymous %}
+                            {{camera}}
+                            {% else %}
+                            <a href="{% url 'camera-update' camera.id %}">{{camera}}</a>
+                            {% endif %}
+                        </td>
+                        <td>{{drone.added_date}}</td>
+                        <td>{{drone.added_by}}</td>
+                        <td>{{drone.last_updated}}</td>
+                        <td>{{drone.last_updated_by}}</td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+
+
+    {% if is_paginated %}
+    <div class="d-flex justify-content-center" >
+
+        {% if page_obj.has_previous %}
+          <a class="btn btn-outline-info mb-4 ml-1" href="?page=1">First</a>
+          <a class="btn btn-outline-info mb-4 ml-1" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+           {% if page_obj.number == num %}
+             <a class="btn btn-info mb-4 ml-1" href="?page={{ num }}">{{ num }}</a>
+
+           {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+             <a class="btn btn-outline-info mb-4  ml-1" href="?page={{ num }}">{{ num }}</a>
+           {% endif %}
+        {% endfor %}
+
+
+        {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4 ml-1" href="?page={{ page_obj.next_page_number }}">Next</a>
+          <a class="btn btn-outline-info mb-4 ml-1" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div>
+        {% if user.is_anonymous %}
+            <a href="#" class="btn btn-outline-info">View full drones list</a>
+        {%else%}
+            <a href="{% url 'drone-add' %}" class="btn btn-outline-success">Add a new drone to the list</a>
+        {% endif %}
+    </div>
+
+ </section>
+
+
+
+{% endblock content %}

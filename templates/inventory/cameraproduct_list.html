@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  <section class="ml-3  mr-3 mt-5">
+
+    <legend >Filters</legend>
+
+        <form method="GET" action=".">
+
+            <div class="form-row">
+                <div class="col">
+
+                    <div class="container">
+
+                        <fieldset >
+                           <div id="div_id_brand" class="form-group row">
+                                <label for="id_brand" class="col-sm ml-1">Brand: </label>
+                                {% if form.brand.value is not None %}
+                                    <input type="text" class="form-control col-sm mr-3" id="id_brand" placeholder="Panasonic" name="brand" value="{{form.brand.value}}">
+                                {%else%}
+                                    <input type="text" class="form-control col-sm mr-3" id="id_brand" placeholder="Panasonic" name="brand" value="">
+                                {% endif %}
+                            </div>
+
+
+                            <div id="div_id_model" class="form-group row">
+                                <label for="id_model" class="col-sm ml-1">Model: </label>
+                                {% if form.model.value is not None %}
+                                    <input type="text" class="form-control col-sm mr-3" id="id_model" placeholder="S1R"  name="model" value="{{form.model.value}}">
+                                {%else%}
+                                    <input type="text" class="form-control col-sm mr-3" id="id_model" placeholder="S1R" name="brand" value="">
+                                {% endif %}
+                            </div>
+
+                            <div id="div_id_res" class="form-group row">
+                                <label for="id_red" class="col-sm ml-1">Resolution: </label>
+                                {% if form.resolution.value is not None %}
+                                    <input type="text" class="form-control col-sm mr-3" id="id_res" placeholder="47 Mpx"  name="resolution" value="{{form.resolution.value}}">
+                                {%else%}
+                                     <input type="text" class="form-control col-sm mr-3" id="id_res" placeholder="47 Mpx"  name="resolution" value="">
+                                {% endif %}
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row ml-5 mr-5">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Filter Cameras Search</button>
+            </div>
+
+        </form>
+
+
+  </section>
+
+  <section class="ml-3  mr-3 mt-5">
+    <legend>Cameras details information</legend>
+
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col"><a href="{% url 'camera-list' %}?sort=brand">Brand</a></th>
+              <th scope="col"><a href="{% url 'camera-list' %}?sort=model">Model Designation</a></th>
+              <th scope="col"><a href="{% url 'camera-list' %}?sort=sensores">Sensor Resolution</a></th>
+              <th scope="col">Added on</th>
+              <th scope="col">Added by</th>
+              <th scope="col">Last Updated on</th>
+              <th scope="col">Last Updated by</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if sorted == 'brand' %}
+                {% for camera in object_list|dictsort:'brand' %}
+                    <tr>
+                        {% if user.is_anonymous%}
+                            <th scope="row">{{camera.id}}</th>
+                        {% else %}
+                            <th scope="row"><a href="{% url 'camera-update' camera.id %}">{{camera.id}}</a></th>
+                        {% endif%}
+                        <td>{{camera.brand}}</td>
+                        <td>{{camera.model}}</td>
+                        <td>{{camera.camera_resolution}}</td>
+                        <td>{{camera.added_date}}</td>
+                        <td>{{camera.added_by}}</td>
+                        <td>{{camera.last_updated}}</td>
+                        <td>{{camera.last_updated_by}}</td>
+                    </tr>
+                {% endfor %}
+
+            {% elif sorted == 'model' %}
+                {% for camera in object_list|dictsort:'model' %}
+                    <tr>
+                        {% if user.is_anonymous%}
+                            <th scope="row">{{camera.id}}</th>
+                        {% else %}
+                            <th scope="row"><a href="{% url 'camera-update' camera.id %}">{{camera.id}}</a></th>
+                        {% endif%}
+                        <td>{{camera.brand}}</td>
+                        <td>{{camera.model}}</td>
+                        <td>{{camera.camera_resolution}}</td>
+                        <td>{{camera.added_date}}</td>
+                        <td>{{camera.added_by}}</td>
+                        <td>{{camera.last_updated}}</td>
+                        <td>{{camera.last_updated_by}}</td>
+                    </tr>
+                {% endfor %}
+
+            {% elif sorted == 'sensores' %}
+                {% for camera in object_list|dictsort:'camera_resolution' %}
+                    <tr>
+                        {% if user.is_anonymous%}
+                            <th scope="row">{{camera.id}}</th>
+                        {% else %}
+                            <th scope="row"><a href="{% url 'camera-update' camera.id %}">{{camera.id}}</a></th>
+                        {% endif%}
+                        <td>{{camera.brand}}</td>
+                        <td>{{camera.model}}</td>
+                        <td>{{camera.camera_resolution}}</td>
+                        <td>{{camera.added_date}}</td>
+                        <td>{{camera.added_by}}</td>
+                        <td>{{camera.last_updated}}</td>
+                        <td>{{camera.last_updated_by}}</td>
+                    </tr>
+                {% endfor %}
+
+            {% else %}
+
+                {% for camera in object_list %}
+                    <tr>
+                        {% if user.is_anonymous%}
+                            <th scope="row">{{camera.id}}</th>
+                        {% else %}
+                            <th scope="row"><a href="{% url 'camera-update' camera.id %}">{{camera.id}}</a></th>
+                        {% endif%}
+                        <td>{{camera.brand}}</td>
+                        <td>{{camera.model}}</td>
+                        <td>{{camera.camera_resolution}}</td>
+                        <td>{{camera.added_date}}</td>
+                        <td>{{camera.added_by}}</td>
+                        <td>{{camera.last_updated}}</td>
+                        <td>{{camera.last_updated_by}}</td>
+                    </tr>
+                {% endfor %}
+
+            {% endif %}
+        </tbody>
+    </table>
+
+
+    {% if is_paginated %}
+    <div class="d-flex justify-content-center" >
+
+        {% if page_obj.has_previous %}
+          <a class="btn btn-outline-info mb-4 ml-1" href="?page=1">First</a>
+          <a class="btn btn-outline-info mb-4 ml-1" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+           {% if page_obj.number == num %}
+             <a class="btn btn-info mb-4 ml-1" href="?page={{ num }}">{{ num }}</a>
+
+           {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+             <a class="btn btn-outline-info mb-4  ml-1" href="?page={{ num }}">{{ num }}</a>
+           {% endif %}
+        {% endfor %}
+
+
+        {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4 ml-1" href="?page={{ page_obj.next_page_number }}">Next</a>
+          <a class="btn btn-outline-info mb-4 ml-1" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div>
+        {% if user.is_anonymous %}
+            <a href="#" class="btn btn-outline-info">View full cameras list</a>
+        {%else%}
+            <a href="{% url 'camera-add' %}" class="btn btn-outline-success">Add a new camera to the list</a>
+        {% endif %}
+    </div>
+
+ </section>
+
+
+
+{% endblock content %}
