@@ -6,8 +6,8 @@ script:
 services:
   - postgresql
 env:
-  - DJANGO=3.0.7 DB=postgresql
-  - SECRET_KEY='PIX4D!teST'
+  - DJANGO_DEBUG_MODE='False'
+  - PIX4D_SECRET_KEY='PIX4D!teST'
 install:
   - pip install pipenv
   - pipenv install
