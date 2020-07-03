@@ -2,12 +2,13 @@ language: python
 python:
   - 3.6.5
 script:
+  - export SECRET_KEY=${PIX4D_SECRET_KEY}
   - python manage.py test
 services:
   - postgresql
 env:
   - DJANGO_DEBUG_MODE='False'
-  - PIX4D_SECRET_KEY='PIX4D!teST'
+  - PIX4D_SECRET_KEY='PIX4DteST'
 install:
   - pip install pipenv
   - pipenv install
