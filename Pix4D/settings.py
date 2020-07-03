@@ -129,7 +129,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'inventory-home'
 LOGIN_URL = 'login'
 
-
+'''
 # Do not let the browser guess the content type, use the type in the content-type instead
 SECURE_CONTENT_TYPE_NOSNIFF = True
 # Block all suspected XSS (Cross Site Scripting attacks)
@@ -148,6 +148,6 @@ SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 # Add preload directive to HTTP header for HSTS
 SECURE_HSTS_PRELOAD = True
-
+'''
 
 django_heroku.settings(locals())
