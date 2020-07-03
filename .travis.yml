@@ -2,8 +2,11 @@ language: python
 python:
   - 3.6.5
 script:
-  - pytest
-
+  - python manage.py test
+services:
+  - postgresql
+install:
+  - pipenv install
 notifications:
   email:
     recipients:
