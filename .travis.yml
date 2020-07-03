@@ -7,11 +7,11 @@ services:
   - postgresql
 env:
   - DJANGO=3.0.7 DB=postgresql
-  - pip install -r requirements.txt
   - SECRET_KEY='PIX4D!teST'
 install:
   - pip install pipenv
   - pipenv install
+  - pip install -r requirements.txt
 notifications:
   email:
     recipients:
