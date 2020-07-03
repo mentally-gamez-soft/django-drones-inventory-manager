@@ -10,8 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+BOOL_DEPLOIEMENT_HEROKU = False
+if BOOL_DEPLOIEMENT_HEROKU:
+    print('<<<<<<<<<<   DEPLOIEMENT POUR ENVIRONNEMENT HEROKU  >>>>>>>>>>>>>')
+else:
+    print('<<<<<<<<<<   DEPLOIEMENT POUR ENVIRONNEMENT TRAVIS CI  >>>>>>>>>>>>>')
+
 import os
-import django_heroku
+if BOOL_DEPLOIEMENT_HEROKU:
+    import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,7 +33,10 @@ SECRET_KEY = os.environ.get('PIX4D_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = (os.environ.get('DJANGO_DEBUG_MODE') == 'True')
 
-ALLOWED_HOSTS = ['droneinventoryapp.herokuapp.com', ]
+if BOOL_DEPLOIEMENT_HEROKU:
+    ALLOWED_HOSTS = ['droneinventoryapp.herokuapp.com', ]
+else:
+    ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -129,25 +139,26 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'inventory-home'
 LOGIN_URL = 'login'
 
+if BOOL_DEPLOIEMENT_HEROKU:
+    # Do not let the browser guess the content type, use the type in the content-type instead
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    # Block all suspected XSS (Cross Site Scripting attacks)
+    SECURE_BROWSER_XSS_FILTER = True
+    # Do not allow displaying parts on the site in a frame
+    X_FRAME_OPTIONS = 'DENY'
+    # Only send CSRF Cookie over HTTPS connection
+    CSRF_COOKIE_SECURE = True
+    # Only send session Cookie over HTTPS connection
+    SESSION_COOKIE_SECURE = True
+    # Force all requests over HTTPS
+    SECURE_SSL_REDIRECT = True
+    # Activate HSTS and set value to one year in order to force requests HTTP to HTTPS and reduce man in the middle attacks
+    SECURE_HSTS_SECONDS = 31536000
+    # Include subdomains as well
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    # Add preload directive to HTTP header for HSTS
+    SECURE_HSTS_PRELOAD = True
 
-# Do not let the browser guess the content type, use the type in the content-type instead
-SECURE_CONTENT_TYPE_NOSNIFF = True
-# Block all suspected XSS (Cross Site Scripting attacks)
-SECURE_BROWSER_XSS_FILTER = True
-# Do not allow displaying parts on the site in a frame
-X_FRAME_OPTIONS = 'DENY'
-# Only send CSRF Cookie over HTTPS connection
-CSRF_COOKIE_SECURE = True
-# Only send session Cookie over HTTPS connection
-SESSION_COOKIE_SECURE = True
-# Force all requests over HTTPS
-SECURE_SSL_REDIRECT = True
-# Activate HSTS and set value to one year in order to force requests HTTP to HTTPS and reduce man in the middle attacks
-SECURE_HSTS_SECONDS = 31536000
-# Include subdomains as well
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# Add preload directive to HTTP header for HSTS
-SECURE_HSTS_PRELOAD = True
 
-
-django_heroku.settings(locals())
+if BOOL_DEPLOIEMENT_HEROKU:
+    django_heroku.settings(locals())
